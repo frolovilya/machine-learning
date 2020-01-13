@@ -63,7 +63,7 @@ def nn_cost_function(layer_coefficients, x, y):
     :param y: SL x m expected results matrix, where Sl - output layer units count, m - experiments count
     :return: summary cost
     """
-    return - 1 / y.size * np.sum((
+    return - 1 / y.shape[1] * np.sum((
             np.multiply(y, np.log(forward_propagation(layer_coefficients, x)[-1]))  # SL x m
             +
             np.multiply((1 - y), np.log(1 - forward_propagation(layer_coefficients, x)[-1]))  # SL x m
@@ -92,7 +92,7 @@ def sigmoid_derivative(z):
     """
     Calculate sigmoid function derivative dg/dz
     """
-    return np.multiply(sigmoid(z), 1 - sigmoid(z))
+    return np.multiply(z, 1 - z)
 
 
 def back_propagation(layer_coefficients, y, output):
@@ -195,19 +195,30 @@ if __name__ == "__main__":
         return out
 
 
+    def predict_digit(nn_coefficients, image):
+        output_data = forward_propagation(nn_coefficients, image)[-1]
+        max_index = np.argmax(output_data) + 1
+
+        # data set contains 10 instead of 0
+        return max_index if max_index < 10 else 0
+
+
     expected_output = np.array([digit_to_output_vector(d) for d in y]).transpose()
 
-    # original_shape = ((25, 401), (10, 26))
-    # initial_coefficients = np.random.uniform(-0.12, 0.12, 25*401 + 10*26)
+    original_shape = ((25, 401), (10, 26))
+    initial_coefficients = np.random.uniform(-1, 1, 25 * 401 + 10 * 26)
 
-    original_shape, initial_guess = unroll_list_of_matrices_to_vector(nn_coefficients)
+    # original_shape, initial_guess = unroll_list_of_matrices_to_vector(nn_coefficients)
 
     coefficients_vector = optimize.fmin_cg(nn_regularized_cost_function,
-                                           initial_guess,
+                                           initial_coefficients,
                                            fprime=nn_regularized_gradient,
-                                           args=(original_shape, x.transpose(), expected_output, 1),
+                                           args=(original_shape, x.transpose(), expected_output, 0),
                                            maxiter=50)
 
-    coefficients = roll_vector_to_list_of_matrices(coefficients_vector, original_shape)
+    nn_learned_coefficients = roll_vector_to_list_of_matrices(coefficients_vector, original_shape)
 
-    print(coefficients)
+    print(nn_learned_coefficients)
+
+    nn_new_predictions = [predict_digit(nn_learned_coefficients, image.reshape(image.size, 1)) for image in x]
+    print_predictions_accuracy(nn_new_predictions, y)

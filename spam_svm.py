@@ -21,6 +21,12 @@ def process_email(file_path):
 
 
 def get_vocab_vector(vocab_file):
+    """
+    Load vocab file as vector
+
+    :param vocab_file: spam vocabulary dictionary file
+    :return: vocab 1 x n vector, n - number of words
+    """
     return np.loadtxt(vocab_file, dtype=str)[:, 1]
 
 

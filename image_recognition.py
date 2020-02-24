@@ -1,8 +1,6 @@
 import scipy.io
-import matplotlib.pyplot as plt
 import random
-import math
-import numpy as np
+from images import *
 
 
 def load_data():
@@ -11,16 +9,6 @@ def load_data():
     y = data['y']  # m x 1 vector of image classes (numbers 0 - 9)
 
     return x, y
-
-
-def vector_to_square_image(image_vector):
-    size = int(math.sqrt(image_vector.size))
-    return np.transpose(image_vector.reshape(size, size))
-
-
-def plot_image(image):
-    plt.imshow(image, cmap='gray', interpolation='none')
-    plt.show()
 
 
 def print_predictions_accuracy(predictions, y):

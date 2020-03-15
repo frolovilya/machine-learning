@@ -82,6 +82,7 @@ def regularized_cost_function_derivative(cx, y, regularization_rate, matrices_sh
     :param y: (m x k) results matrix, m - products, k - user ratings
     :param regularization_rate: regularization rate
     :param matrices_shapes: coefficients and x original shapes
+    :param r: (m x k) binary matrix, 1 if j-th user rated i-th product, 0 if not
     :return: k*n vector of derivatives
     """
     coefficients, x = roll_vector_to_list_of_matrices(cx, matrices_shapes)
@@ -92,13 +93,14 @@ def regularized_cost_function_derivative(cx, y, regularization_rate, matrices_sh
     return unroll_list_of_matrices_to_vector([dc, dx])[1]
 
 
-def mean_normalize_variables(y):
+def mean_normalize_variables(y, r):
     """
     Normalize variables matrix by subtracting mean from each value
 
     :param y: (m x k) matrix
+    :param r: (m x k) binary matrix, 1 if j-th user rated i-th product, 0 if not
     :return: (m x 1) vector of means, (m x k) normalized matrix
     """
-    means = np.mean(y, axis=1).reshape((y.shape[0], 1))  # m x 1
+    means = (np.sum(y, axis=1) / np.sum(r, axis=1)).reshape((y.shape[0], 1))  # m x 1
 
-    return means, y - means
+    return means, np.multiply(y - means, r)

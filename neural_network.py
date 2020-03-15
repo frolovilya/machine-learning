@@ -3,6 +3,7 @@ import scipy.io
 from scipy import optimize
 from logistic_regression import sigmoid
 from image_recognition import *
+from utils import *
 
 
 def forward_propagation(layer_coefficients, input_data):
@@ -26,32 +27,6 @@ def forward_propagation(layer_coefficients, input_data):
         )
 
     return data
-
-
-def roll_vector_to_list_of_matrices(v, shapes):
-    first = 0
-    result = []
-
-    for shape in shapes:
-        last = first + shape[0] * shape[1]
-        result.append(np.array(v[first:last]).reshape(shape[0], shape[1]))
-        first = last
-
-    return result
-
-
-def unroll_list_of_matrices_to_vector(l):
-    result_vector = np.array([])
-    original_shape = []
-
-    for m in l:
-        original_shape.append(m.shape)
-        result_vector = np.hstack([
-            result_vector,
-            m.reshape(m.shape[0] * m.shape[1])
-        ])
-
-    return original_shape, result_vector
 
 
 def nn_cost_function(layer_coefficients, x, y):

@@ -1,18 +1,6 @@
 import numpy as np
 
 
-def normalize_variable(x):
-    """
-    :param x: (m x n) vector,
-               m - experiments count, n - variables
-    :return: normalized (m x n) vector, mu - column means, sigma - column std deviations
-    """
-    mu = np.mean(x, axis=0)
-    sigma = np.std(x - mu, axis=0)
-
-    return [np.divide(x - mu, sigma), mu, sigma]
-
-
 def cov_matrix(x):
     return 1 / x.shape[0] * (x.transpose() @ x)
 

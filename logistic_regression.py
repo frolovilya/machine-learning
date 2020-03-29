@@ -1,4 +1,3 @@
-from scipy import optimize
 import numpy as np
 import math
 
@@ -66,17 +65,6 @@ def regularized_cost_function_derivative(coefficients, x, y,
 
     return cost_function_derivative(coefficients, x, y) \
            + regularization_rate / y.size * c
-
-
-def learn(x, y, regularization_rate):
-    x = np.hstack((np.ones(x.shape[0]).reshape(x.shape[0], 1), x))
-
-    return optimize.fmin_cg(regularized_cost_function,
-                            np.zeros(x.shape[1]),
-                            fprime=regularized_cost_function_derivative,
-                            args=(x, y, regularization_rate),
-                            maxiter=50,
-                            disp=False)
 
 
 def predict(coefficients, x):

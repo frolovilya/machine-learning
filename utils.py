@@ -1,23 +1,26 @@
 import numpy as np
-import pandas as pd
 
 
-def normalize_variable(Xj):
+def normalize_variable(x):
     """
-    @param Xj: (m x 1) vector,
-               m - experiments count, 1 - one variable
-    @return: normalized (m x 1) vector
+    :param x: (m x n) vector,
+               m - experiments count, n - variables
+    :return: normalized (m x n) vector, mu - column means, sigma - column std deviations
     """
-    return (Xj.values - np.mean(Xj.values)) / np.std(Xj.values)
+    mu = np.mean(x, axis=0)
+    sigma = np.std(x - mu, axis=0)
+
+    return [np.divide(x - mu, sigma), mu, sigma]
 
 
 def concat_with_x0(x):
     """
-    @param x: (m x (n - 1)) DataFrame,
-              n - variables count, m - experiments count
-    @return: (m x n) DataFrame, with first column filled with 1
+    Concat x with x0 (ones) vector
+
+    :param x: (m x n) matrix
+    :return: (m x (n + 1)) matrix with first column containing all ones
     """
-    return pd.concat([pd.DataFrame([1] * x.shape[0]), x], axis=1)
+    return np.hstack((np.ones((x.shape[0], 1)), x))
 
 
 def roll_vector_to_list_of_matrices(unrolled_vector, shapes):

@@ -45,7 +45,7 @@ def nn_cost_function(layer_coefficients, x, y):
     ))
 
 
-def nn_regularized_cost_function(unrolled_layer_coefficients, shape, x, y, regularization_rate):
+def nn_regularized_cost_function(unrolled_layer_coefficients, x, y, regularization_rate, shape):
     """
     Regularized neural network cost function.
     See nn_cost_function description.
@@ -122,7 +122,7 @@ def nn_gradient(layer_coefficients, x, y):
     return grad
 
 
-def nn_regularized_gradient(unrolled_layer_coefficients, shape, x, y, regularization_rate):
+def nn_regularized_gradient(unrolled_layer_coefficients, x, y, regularization_rate, shape):
     """
     Regularized neural network gradient.
     See nn_gradient description.
@@ -147,53 +147,3 @@ def nn_regularized_gradient(unrolled_layer_coefficients, shape, x, y, regulariza
 
     return unroll_list_of_matrices_to_vector(reg_gradients)[1]
 
-
-if __name__ == "__main__":
-    data = scipy.io.loadmat('data/ex3data1.mat')
-    x = data['X']  # m x n^2, where m - experiments count, n - square image size
-    y = data['y']  # m x 1 vector of image classes (numbers 0 - 9)
-
-    weights = scipy.io.loadmat('data/ex3weights.mat')
-    nn_coefficients = (
-        weights['Theta1'],  # S1 x (n^2 + 1), where S1 - hidden layer size, n - square image size
-        weights['Theta2']  # SL x (S1 + 1), where SL - output layer size, S1 - hidden layer size
-    )
-
-
-    def digit_to_output_vector(digit):
-        """
-        Returns 10 x 1 vector with all 0 except 1 for index corresponding to the provided digit.
-        If digit == 0, then 10th element == 1.
-        """
-        out = np.zeros(10)
-        out[9 if digit == 0 else digit - 1] = 1
-        return out
-
-
-    def predict_digit(nn_coefficients, image):
-        output_data = forward_propagation(nn_coefficients, image)[-1]
-        max_index = np.argmax(output_data) + 1
-
-        # data set contains 10 instead of 0
-        return max_index if max_index < 10 else 0
-
-
-    expected_output = np.array([digit_to_output_vector(d) for d in y]).transpose()
-
-    original_shape = ((25, 401), (10, 26))
-    initial_coefficients = np.random.uniform(-1, 1, 25 * 401 + 10 * 26)
-
-    # original_shape, initial_guess = unroll_list_of_matrices_to_vector(nn_coefficients)
-
-    coefficients_vector = optimize.fmin_cg(nn_regularized_cost_function,
-                                           initial_coefficients,
-                                           fprime=nn_regularized_gradient,
-                                           args=(original_shape, x.transpose(), expected_output, 0),
-                                           maxiter=50)
-
-    nn_learned_coefficients = roll_vector_to_list_of_matrices(coefficients_vector, original_shape)
-
-    print(nn_learned_coefficients)
-
-    nn_new_predictions = [predict_digit(nn_learned_coefficients, image.reshape(image.size, 1)) for image in x]
-    print_predictions_accuracy(nn_new_predictions, y)

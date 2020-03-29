@@ -40,11 +40,3 @@ def map_text_to_feature_vector(email_body, vocab):
     """
     return np.array([v in email_body for v in vocab], dtype=int, ndmin=2)
 
-
-if __name__ == "__main__":
-    email_str = process_email("./data/spamSample1.txt")
-    vocab = get_vocab_vector("./data/vocab.txt")
-
-    res = map_text_to_feature_vector(email_str, vocab)
-    print(res)
-

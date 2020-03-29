@@ -1,14 +1,5 @@
-import scipy.io
 import random
 from images import *
-
-
-def load_data():
-    data = scipy.io.loadmat('ex3data1.mat')
-    x = data['X']  # m x n^2, where m - experiments count, n - square image size
-    y = data['y']  # m x 1 vector of image classes (numbers 0 - 9)
-
-    return x, y
 
 
 def print_predictions_accuracy(predictions, y):

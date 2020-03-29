@@ -64,14 +64,3 @@ def find_clusters(x, number_of_clusters):
         centroids = new_centroids
 
     return clusters, centroids
-
-
-if __name__ == "__main__":
-    image_data = scipy.io.loadmat('./data/bird_small.mat')['A']
-    number_of_colors = 16
-    image_vector = image_data.reshape((image_data.shape[0] * image_data.shape[1], image_data.shape[2]))
-
-    color_clusters, color_cluster_centroids = find_clusters(image_vector, number_of_colors)
-
-
-

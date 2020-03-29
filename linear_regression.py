@@ -16,6 +16,15 @@ def cost_function(coefficients, x, y):
 
 
 def regularized_cost_function(coefficients, x, y, regularization_rate):
+    """
+    Calculate regularized cost function for linear regression
+
+    :param coefficients: (1 x n) vector of regression coefficients
+    :param x: (m x n) matrix, m - experiments count, n - variables count
+    :param y: (m x 1) results vector
+    :param regularization_rate: regularization rate
+    :return: summary cost
+    """
     c = np.reshape(coefficients[1:coefficients.size], (coefficients.size - 1, 1))
 
     return cost_function(coefficients, x, y) \
@@ -44,6 +53,16 @@ def cost_function_derivative(coefficients, x, y):
 
 
 def regularized_cost_function_derivative(coefficients, x, y, regularization_rate):
+    """
+    Calculate linear regression regularized cost function derivative dJ/dC for each coefficient
+
+    :param coefficients: (1 x n) vector of regression coefficients
+    :param x: input variables (m x n) matrix,
+              n - variables count, m - experiments count
+    :param y: output results (m x 1) vector, m - experiments count
+    :param regularization_rate: regularization rate
+    :return: (1 x n) vector of derivative calculation results
+    """
     c = np.concatenate([[0], coefficients[1:coefficients.size]])
 
     return cost_function_derivative(coefficients, x, y) \

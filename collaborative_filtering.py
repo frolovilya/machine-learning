@@ -1,5 +1,6 @@
 import numpy as np
-from utils import *
+from utils import roll_vector_to_list_of_matrices, unroll_list_of_matrices_to_vector
+from optimize import find_coefficients
 
 
 def cost_function(coefficients, x, y, r):
@@ -16,7 +17,7 @@ def cost_function(coefficients, x, y, r):
     return np.sum(1 / 2 * np.multiply(np.power(diff, 2), r))
 
 
-def regularized_cost_function(cx, y, regularization_rate, matrices_shapes, r):
+def regularized_cost_function(cx, x, y, regularization_rate, matrices_shapes, r):
     """
     Regularized collaborative filtering linear regression cost function
 
@@ -30,7 +31,7 @@ def regularized_cost_function(cx, y, regularization_rate, matrices_shapes, r):
     coefficients, x = roll_vector_to_list_of_matrices(cx, matrices_shapes)
 
     return cost_function(coefficients, x, y, r) \
-           + regularization_rate / 2 * np.sum(np.power(coefficients, 2))\
+           + regularization_rate / 2 * np.sum(np.power(coefficients, 2)) \
            + regularization_rate / 2 * np.sum(np.power(x, 2))
 
 
@@ -74,7 +75,7 @@ def cost_function_derivative_x(coefficients, x, y, r):
     )  # m x n
 
 
-def regularized_cost_function_derivative(cx, y, regularization_rate, matrices_shapes, r):
+def regularized_cost_function_derivative(cx, x, y, regularization_rate, matrices_shapes, r):
     """
     Regularized collaborative filtering linear regression cost function derivative dJ/dC + dJ/dx
 
@@ -104,3 +105,52 @@ def mean_normalize_variables(y, r):
     means = (np.sum(y, axis=1) / np.sum(r, axis=1)).reshape((y.shape[0], 1))  # m x 1
 
     return means, np.multiply(y - means, r)
+
+
+def find_new_parameters(y_norm, r):
+    """
+    Use collaborative filtering algorithm to find client's theta and movie's X feature vectors
+
+    :param y_norm: (m x k) mean-normalized movie ratings
+    :param r: binary (m x k) matrix indicating if user rated movie
+    :return: (k x n) coefficients, k - users, n - features;
+             (m x n) movie features, m - movies, n - features
+    """
+    num_features = 10
+    theta = np.random.rand(y_norm.shape[1], num_features)  # k x n
+    x = np.random.rand(y_norm.shape[0], num_features)  # m x n
+
+    original_shapes, cx = unroll_list_of_matrices_to_vector([theta, x])
+
+    optimal_values = find_coefficients((), y_norm,
+                                       regularized_cost_function, regularized_cost_function_derivative,
+                                       regularization_rate=10,
+                                       max_iterations=200,
+                                       initial_coefficients=cx,
+                                       additional_args=(original_shapes, r))
+
+    new_theta, new_x = roll_vector_to_list_of_matrices(optimal_values, original_shapes)
+
+    return new_theta, new_x
+
+
+def find_recommended_movies(x, coefficients, y_means):
+    """
+    Find recommended movies using collaborative filtering calculation results
+
+    :param x: (m x n) movie features, m - movies, n - features
+    :param coefficients: (n x 1) user coefficients, n - features
+    :param y_means: (m x 1) mean movie ratings, m - movies
+    :return: recommended items sorted by descending rating
+    """
+    my_recommendations = x @ coefficients + y_means  # m x 1
+
+    # add indexes column
+    my_recommendations = np.hstack((
+        np.arange(my_recommendations.shape[0], dtype=int).reshape(my_recommendations.shape),
+        my_recommendations
+    ))  # m x 2
+
+    # desc sort by rating
+    return my_recommendations[np.argsort(my_recommendations[:, 1])][::-1]
+

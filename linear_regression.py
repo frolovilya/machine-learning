@@ -80,3 +80,22 @@ def normal_equation(x, y):
     """
     coefficients = np.linalg.pinv(x.transpose() @ x) @ x.transpose() @ y
     return coefficients.transpose()[0]
+
+
+def map_to_degree(x, d):
+    """
+    Map m x 1 vector to m x d normalized variables vector having
+    x^1, x^2, ..., x^d
+
+    :param x: m x 1 variables vector
+    :param d: polynomial degree
+    :return: m x d variables vector
+    """
+    result = x
+    for i in range(2, d + 1):
+        result = np.hstack((
+            result,
+            np.power(x, i)
+        ))
+
+    return result

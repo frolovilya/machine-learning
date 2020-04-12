@@ -1,9 +1,6 @@
-import numpy as np
-import scipy.io
-from scipy import optimize
 from logistic_regression import sigmoid
-from image_recognition import *
-from utils import *
+import numpy as np
+from utils import unroll_list_of_matrices_to_vector, roll_vector_to_list_of_matrices
 
 
 def forward_propagation(layer_coefficients, input_data):
@@ -147,3 +144,17 @@ def nn_regularized_gradient(unrolled_layer_coefficients, x, y, regularization_ra
 
     return unroll_list_of_matrices_to_vector(reg_gradients)[1]
 
+
+def predict_digit(nn_coefficients, image):
+    """
+    Find index of the output unit with the max value
+
+    :param nn_coefficients: L x (n x 1) nn layer coefficients
+    :param image: n^2 x 1 image vector
+    :return:
+    """
+    output_data = forward_propagation(nn_coefficients, image)[-1]
+    max_index = np.argmax(output_data) + 1
+
+    # data set contains 10 instead of 0
+    return max_index if max_index < 10 else 0

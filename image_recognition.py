@@ -1,8 +1,15 @@
 import random
-from images import *
+import numpy as np
+from images import vector_to_square_image, plot_image
 
 
 def print_predictions_accuracy(predictions, y):
+    """
+    Calculate image class prediction accuracy
+
+    :param predictions: 1 x m vector of predictions for each image
+    :param y: m x 1 vector of actual image classes
+    """
     actual_digits = y.transpose()[0]
     actual_digits[actual_digits == 10] = 0
 
@@ -13,7 +20,10 @@ def print_predictions_accuracy(predictions, y):
 
 def predict_random_images(predictions, x):
     """
-    Show random images from data set and predict values
+    Show random images from data set and their predicted classes
+
+    :param predictions: 1 x m vector of predictions for each image
+    :param x: m x n^2 matrix, where m - experiments count, n - square image size
     """
     random_indexes = [random.randint(0, x.shape[0]) for i in range(20)]
 

@@ -13,6 +13,18 @@ def normalize_variable(x):
     return [np.divide(x - mu, sigma), mu, sigma]
 
 
+def normalize_variable_with_parameters(x, mu, sigma):
+    """
+    Normalize vector x with given mean (mu) and std deviation (sigma)
+
+    :param x: (m x n) vector,
+    :param mu: column means
+    :param sigma: column std deviations
+    :return: normalized vector
+    """
+    return np.divide(x - mu, sigma)
+
+
 def concat_with_x0(x):
     """
     Concat x with x0 (ones) vector

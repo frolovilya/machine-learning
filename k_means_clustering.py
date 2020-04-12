@@ -1,6 +1,4 @@
 import numpy as np
-import scipy.io
-from timeit import default_timer as timer
 
 
 def init_cluster_centroids(x, number_of_clusters):

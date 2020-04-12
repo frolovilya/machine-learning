@@ -39,4 +39,3 @@ def map_text_to_feature_vector(email_body, vocab):
     :return: 1 x n boolean vector of matched words
     """
     return np.array([v in email_body for v in vocab], dtype=int, ndmin=2)
-

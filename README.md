@@ -16,5 +16,6 @@ Machine learning Python notebooks based on the
 ```
 git clone https://github.com/frolovilya/machine-learning.git
 pip3 install -r requirements.txt
-./venv/bin/jupyter-notebook
+source ~/.bash_profile
+jupyter notebook
 ```

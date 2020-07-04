@@ -3,14 +3,14 @@
 Machine learning Python notebooks based on the 
 [ML Course](https://www.coursera.org/learn/machine-learning/home/welcome) assignments.
 
-* [Linear Regression](./notebooks/Linear%20Regression.ipynb)
-* [Logistic Regression](./notebooks/Logistic%20Regression.ipynb)
-* [Neural Networks](./notebooks/Neural%20Networks.ipynb)
-* [Support Vector Machines](./notebooks/Support%20Vector%20Machines.ipynb)
-* [K-means Clustering](./notebooks/K-means%20Clustering.ipynb)
-* [Principal Components Analysis](./notebooks/Principal%20Components%20Analysis.ipynb)
-* [Anomaly Detection](./notebooks/Anomaly%20Detection.ipynb)
-* [Recommender Systems](./notebooks/Recommender%20Systems.ipynb)
+* [Linear Regression](./docs/linear_regression.html)
+* [Logistic Regression](./docs/logistic_regression.html)
+* [Neural Networks](./docs/neural_networks.html)
+* [Support Vector Machines](./docs/support_vector_machines.html)
+* [K-means Clustering](./docs/k_means_clustering.html)
+* [Principal Components Analysis](./docs/principal_components_analysis.html)
+* [Anomaly Detection](./docs/anomaly_detection.html)
+* [Recommender Systems](./docs/recommender_systems.html)
 
 ## Running Notebooks
 ```

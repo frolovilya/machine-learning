@@ -1,4 +1,4 @@
-# machine-learning
+# [Machine Learning](https://github.com/frolovilya/machine-learning)
 
 Machine learning Python notebooks based on the 
 [ML Course](https://www.coursera.org/learn/machine-learning/home/welcome) assignments.
